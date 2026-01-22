@@ -1,74 +1,74 @@
-# React + TypeScript + Vite
+# Full-Stack Blog Platform (React + Express)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern full-stack blog application built using **React** on the frontend and **Express.js** on the backend.  
+The platform supports authentication, blog management, user interactions, and content from external APIs.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+### 🔐 Authentication & Authorization
+- User registration and login
+- JWT-based authentication
+- Protected routes (only logged-in users can create, comment, save, or star blogs)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📝 Blog Management
+- Create, edit, and delete blogs
+- Fetch blogs from external public blog APIs
+- Store user-created blogs in the database
+- View single blog details page
 
-## Expanding the ESLint configuration
+### 💬 Interactions
+- Comment on blogs
+- Star (like) blogs
+- Save blogs to user profile
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 👤 User Profile
+- View saved blogs
+- View authored blogs
+- Display basic contact/user information
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🔍 Discoverability
+- Search blogs by title or keyword
+- Pagination for blog listings
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠 Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Frontend
+- React
+- React Router
+- Axios / Fetch API
+- Context API or Redux (for auth state)
+- CSS / Tailwind / Styled Components (optional)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Backend
+- Node.js
+- Express.js
+- MongoDB (with Mongoose) or PostgreSQL
+- JWT for authentication
+- bcrypt for password hashing
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# Somo
+---
+
+## 🗂 Project Structure
+
+Somo/
+│
+├── client/ # React frontend
+│ ├── src/
+│ │ ├── components/
+│ │ ├── pages/
+│ │ ├── context/
+│ │ ├── services/
+│ │ └── App.jsx
+│
+├── server/ # Express backend
+│ ├── controllers/
+│ ├── models/
+│ ├── routes/
+│ ├── middleware/
+│ └── index.js
+│
+└── README.md
