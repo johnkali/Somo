@@ -4,11 +4,16 @@ import Register from './components/Register'
 
 function App() {
 
+;
   return (
     <>
+
+        <div className="">
+            {/*<h1>{message}</h1>*/}
+        </div>
    <Register/>
    <br />
-   <Login/>
+   {/*<Login/>*/}
     </>
   )
 }
