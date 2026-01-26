@@ -1,6 +1,7 @@
 import {useState} from "react";
+import api from '../services/api.ts';
 
-export default function Register() {
+function Register() {
     const [firstName, setFirstName] = useState('');
     const[secondName, setSecondName] = useState('');
     const[email, setEmail] = useState('');
@@ -9,19 +10,21 @@ export default function Register() {
 
 
 
-    const  handleSubmit = async (e)=>{
+    const  handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault();
-        let result = await fetch(
-            'http://localhost:5000/register', {
-                method: 'POST',
-                body: JSON.stringify({firstName, secondName, email, password}),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            }
-        )
-        result = await result.json();
-        console.log("input:", result);
+        try{
+            await api.post("/auth/register", {
+                firstName: firstName,
+                secondName: secondName,
+                email: email,
+                password: password,
+            });
+            alert("User added successfully.");
+
+        }catch (error){
+            console.error(error);
+            alert("Registration failed!");
+        }
     }
   return (
     <div>
@@ -62,3 +65,4 @@ export default function Register() {
     </div>
   );
 }
+export default Register;

@@ -1,5 +1,4 @@
 import './App.css'
-import Login from './components/Login'
 import Register from './components/Register'
 
 function App() {
@@ -13,7 +12,6 @@ function App() {
         </div>
    <Register/>
    <br />
-   {/*<Login/>*/}
     </>
   )
 }

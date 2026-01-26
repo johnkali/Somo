@@ -1,8 +1,8 @@
-import React from 'react'
+
 
 export default function Login () {
 
-    function handleSubmit(e){
+    function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
         e.preventDefault();
         console.log("Log in clicked!")
     }
@@ -11,7 +11,7 @@ export default function Login () {
         <h1>Welcome Back</h1>
         <h3>Login Form</h3>
         <p>Enter your details below</p>
-        <form action={handleSubmit}>
+        <form action="">
             <div>
             <label htmlFor="first-name">First Name:</label>
             <input type="text" id="first-name" required placeholder='Enter First Name' />
@@ -21,7 +21,7 @@ export default function Login () {
             <input type="password" id="pasword" required placeholder='Enter Password' />
         </div>
         <div>
-            <button>Submit</button>
+            <button type="submit" onClick={handleSubmit}>Submit</button>
         </div>
         </form>
         
