@@ -1,11 +1,28 @@
-
+import api from '../services/api.ts'
+import {useState} from "react";
 
 export default function Login () {
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-    function handleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    function handleSubmit async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
         e.preventDefault();
-        console.log("Log in clicked!")
+
+        try {
+            const res = await api.post("/auth/login", { email, password });
+            console.log("LOGIN RESPONSE:", res.data);
+
+            // Save token in localStorage
+            localStorage.setItem("token", res.data.token);
+
+            alert(`Welcome ${res.data.user.fname}`);
+
+        } catch (error: any) {
+            console.error(error.response?.data);
+            alert(error.response?.data?.message || "Login failed");
+        }
     }
+
   return (
     <div>
         <h1>Welcome Back</h1>
@@ -13,8 +30,8 @@ export default function Login () {
         <p>Enter your details below</p>
         <form action="">
             <div>
-            <label htmlFor="first-name">First Name:</label>
-            <input type="text" id="first-name" required placeholder='Enter First Name' />
+            <label htmlFor="email">E-mail:</label>
+            <input type="email" id="email" required placeholder='Enter Email' name="email"/>
         </div>
         <div>
              <label htmlFor="password">First Name:</label>

@@ -1,6 +1,10 @@
 import express from 'express';
 import User from '../models/Users.js';
 import  bcrypt from 'bcryptjs';
+import  jwt from 'jsonwebtoken';
+
+
+
 const router = express.Router();
 
 //Register user
@@ -40,6 +44,54 @@ router.post('/register', async (req, res) => {
         });
     }catch(err) {
     res.status(500).json({message: err.message});
+    }
+})
+
+
+//Login user
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+
+        // validate
+        if(!email || !password) {
+            return res.status(400).json({message: 'All fields are required!'});
+        }
+
+        //check is user exists
+        const user = await User.findOne({email})
+        if(!user) {
+            return res.status(400).json({message: 'User already exist!'});
+        }
+
+        //compare pass
+        const isMatch = await  bcrypt.compare(password, user.password);
+        if(!isMatch) {
+            return res.status(400).json({message: 'User already exist!'});
+        }
+
+        //create jtw
+        const jwt = jwt.sign(
+            {id: user.id, email: user.email},
+            process.env.JWT_SECRET,
+            {expiresIn: process.env.JWT_EXPIRES_IN},
+    )
+
+        //return token + user info
+        res.status(200).json({
+            message: 'User successfully logged in!',
+            token,
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                secondName: user.secondName,
+                email: user.email
+            }
+        });
+    }catch(err) {
+        console.error("LOGIN ERROR:", err);
+        res.status(500).json({message: "Internal server error!"});
     }
 })
 
