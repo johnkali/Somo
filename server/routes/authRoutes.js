@@ -59,13 +59,13 @@ router.post('/login', async (req, res) => {
         }
 
         //find user
-        const userExist =  await User.findOne({email});
-        if(!userExist) {
+        const foundUser =  await User.findOne({ email });
+        if(!foundUser) {
             return res.status(400).json({message: 'Invalid email or password-E!'});
         }
 
-        //compre passwords
-        const isMatch = await  bcrypt.compare(password, user.password);
+        //compare passwords
+        const isMatch = await  bcrypt.compare(password, foundUser.password);
         if(!isMatch) {
             return res.status(400).json({message: 'Invalid email or password-P!'});
         }
@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
 
         //generate jtw
         const token = jwt.sign(
-            {id: user._id},
+            {id: foundUser._id},
             JWT_SECRET,
             {expiresIn: "1d"},
     )
@@ -83,10 +83,10 @@ router.post('/login', async (req, res) => {
             message: 'User successfully logged in successfully!',
             token,
             user: {
-                id: user._id,
-                firstName: user.firstName,
-                secondName: user.secondName,
-                email: user.email
+                id: foundUser._id,
+                firstName: foundUser.firstName,
+                secondName: foundUser.secondName,
+                email: foundUser.email
             }
         });
     }catch(err) {
