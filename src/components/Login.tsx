@@ -1,6 +1,6 @@
 import api from '../services/api.ts'
 import {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
  function Login () {
     const [email, setEmail] = useState('')
@@ -52,6 +52,10 @@ import {useNavigate} from "react-router-dom";
         <div>
             <button type="submit" onClick={handleSubmit}>Submit</button>
         </div>
+            <div>
+                <p>If you don't have an account <Link to="/register">Register here</Link>
+                </p>
+            </div>
         </form>
         
     </div>

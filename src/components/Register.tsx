@@ -1,5 +1,6 @@
 import {useState} from "react";
 import api from '../services/api.ts';
+import {Link} from "react-router-dom";
 
 function Register() {
     const [firstName, setFirstName] = useState('');
@@ -8,7 +9,8 @@ function Register() {
     const[password, setPassword] = useState('');
     const[confirmPassword, setConfirmPassword] = useState('');
 
-
+   //  TODO
+   //check password match between confirm and password
 
     const  handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault();
@@ -62,6 +64,11 @@ function Register() {
         </div>
         <button onClick={handleSubmit} type="submit">Submit</button>
       </form>
+        
+        <div>
+            <p>If you already have an account <Link to="/login">Login here</Link>
+            </p>
+        </div>
     </div>
   );
 }

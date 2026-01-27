@@ -57,16 +57,17 @@ router.post('/login', async (req, res) => {
         if(!email || !password) {
             return res.status(400).json({message: 'All fields are required!'});
         }
+
         //find user
-        const user =  await User.findOne({email});
-        if(!user) {
-            return res.status(400).json({message: 'Invalid email or password!'});
+        const userExist =  await User.findOne({email});
+        if(!userExist) {
+            return res.status(400).json({message: 'Invalid email or password-E!'});
         }
 
         //compre passwords
         const isMatch = await  bcrypt.compare(password, user.password);
         if(!isMatch) {
-            return res.status(400).json({message: 'Invalid email or password1!'});
+            return res.status(400).json({message: 'Invalid email or password-P!'});
         }
         const JWT_SECRET="supersecretkey123"
 
