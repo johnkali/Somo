@@ -1,19 +1,31 @@
 import api from '../services/api.ts'
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-export default function Login () {
+ function Login () {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+     const navigate = useNavigate();
 
-    function handleSubmit async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    //if already logged in
+     useEffect(() => {
+         const token = localStorage.getItem("token");
+         if(token){
+             navigate("/");
+         }
+     }, []);
+
+    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault();
 
         try {
             const res = await api.post("/auth/login", { email, password });
             console.log("LOGIN RESPONSE:", res.data);
-
-            // Save token in localStorage
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("user", JSON.stringify(res.data.user))
+
+            //redirect to homepage
+            navigate("/");
 
             alert(`Welcome ${res.data.user.fname}`);
 
@@ -21,7 +33,7 @@ export default function Login () {
             console.error(error.response?.data);
             alert(error.response?.data?.message || "Login failed");
         }
-    }
+    };
 
   return (
     <div>
@@ -31,11 +43,11 @@ export default function Login () {
         <form action="">
             <div>
             <label htmlFor="email">E-mail:</label>
-            <input type="email" id="email" required placeholder='Enter Email' name="email"/>
+            <input type="email" onChange={(e)=>setEmail(e.target.value)} id="email" required placeholder='Enter Email' name="email"/>
         </div>
         <div>
              <label htmlFor="password">First Name:</label>
-            <input type="password" id="pasword" required placeholder='Enter Password' />
+            <input type="password" onChange={(e)=>setPassword(e.target.value)} id="pasword" required placeholder='Enter Password' />
         </div>
         <div>
             <button type="submit" onClick={handleSubmit}>Submit</button>
@@ -46,3 +58,4 @@ export default function Login () {
 
   )
 }
+export default Login

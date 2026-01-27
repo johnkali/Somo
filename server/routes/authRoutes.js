@@ -4,7 +4,6 @@ import  bcrypt from 'bcryptjs';
 import  jwt from 'jsonwebtoken';
 
 
-
 const router = express.Router();
 
 //Register user
@@ -58,29 +57,29 @@ router.post('/login', async (req, res) => {
         if(!email || !password) {
             return res.status(400).json({message: 'All fields are required!'});
         }
-
-        //check is user exists
-        const user = await User.findOne({email})
+        //find user
+        const user =  await User.findOne({email});
         if(!user) {
-            return res.status(400).json({message: 'User already exist!'});
+            return res.status(400).json({message: 'Invalid email or password!'});
         }
 
-        //compare pass
+        //compre passwords
         const isMatch = await  bcrypt.compare(password, user.password);
         if(!isMatch) {
-            return res.status(400).json({message: 'User already exist!'});
+            return res.status(400).json({message: 'Invalid email or password1!'});
         }
+        const JWT_SECRET="supersecretkey123"
 
-        //create jtw
-        const jwt = jwt.sign(
-            {id: user.id, email: user.email},
-            process.env.JWT_SECRET,
-            {expiresIn: process.env.JWT_EXPIRES_IN},
+        //generate jtw
+        const token = jwt.sign(
+            {id: user._id},
+            JWT_SECRET,
+            {expiresIn: "1d"},
     )
 
         //return token + user info
         res.status(200).json({
-            message: 'User successfully logged in!',
+            message: 'User successfully logged in successfully!',
             token,
             user: {
                 id: user._id,
