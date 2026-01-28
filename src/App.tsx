@@ -9,6 +9,7 @@ import SavedBlogs from "./pages/SavedBlogs";
 import Profile from "./pages/Profile";
 import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
 import PublicRoute from "./components/PublicRoute";
+import Layout from "./components/Layout.tsx";
 
 function App() {
     return (
@@ -22,7 +23,9 @@ function App() {
                     path="/"
                     element={
                         <ProtectedRoutes>
-                            <Home />
+                            <Layout>
+                                <Home />
+                            </Layout>
                         </ProtectedRoutes>
                     }
                 />
@@ -30,7 +33,9 @@ function App() {
                     path="/blogs"
                     element={
                         <ProtectedRoutes>
+                            <Layout>
                             <Blogs />
+                            </Layout>
                         </ProtectedRoutes>
                     }
                 />
@@ -38,7 +43,9 @@ function App() {
                     path="/blogs/create"
                     element={
                         <ProtectedRoutes>
+                            <Layout>
                             <CreateBlog />
+                            </Layout>
                         </ProtectedRoutes>
                     }
                 />
@@ -46,7 +53,9 @@ function App() {
                     path="/saved"
                     element={
                         <ProtectedRoutes>
+                            <Layout>
                             <SavedBlogs />
+                            </Layout>
                         </ProtectedRoutes>
                     }
                 />
@@ -54,7 +63,9 @@ function App() {
                     path="/profile"
                     element={
                         <ProtectedRoutes>
+                            <Layout>
                             <Profile />
+                            </Layout>
                         </ProtectedRoutes>
                     }
                 />
