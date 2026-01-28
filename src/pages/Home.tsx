@@ -5,7 +5,7 @@ function Home() {
     return (
         <div>
             <Navbar />
-            <h1>Welcome, {user.firstName}</h1>
+            <h1 className="text-3xl font-bold text-blue-600">Welcome, {user.firstName}</h1>
             <p>You are logged in</p>
         </div>
     );

@@ -1,22 +1,70 @@
-import './App.css'
-import Login from "./components/Login.tsx";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Blogs from "./pages/Blogs";
+import CreateBlog from "./pages/CreateBlog";
+import SavedBlogs from "./pages/SavedBlogs";
+import Profile from "./pages/Profile";
 import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
-import Home from "./pages/Home.tsx";
-import Register from "./components/Register.tsx";
-import PublicRoute from "./components/PublicRoute.tsx";
-function App() {
+import PublicRoute from "./components/PublicRoute";
 
-;
+function App() {
     return (
         <BrowserRouter>
+            {/* Navbar will be visible on all pages */}
+            <Navbar />
 
             <Routes>
+                {/* Protected routes */}
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoutes>
+                            <Home />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="/blogs"
+                    element={
+                        <ProtectedRoutes>
+                            <Blogs />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="/blogs/create"
+                    element={
+                        <ProtectedRoutes>
+                            <CreateBlog />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="/saved"
+                    element={
+                        <ProtectedRoutes>
+                            <SavedBlogs />
+                        </ProtectedRoutes>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoutes>
+                            <Profile />
+                        </ProtectedRoutes>
+                    }
+                />
+
+                {/* Public routes */}
                 <Route
                     path="/login"
                     element={
                         <PublicRoute>
-                            <Login/>
+                            <Login />
                         </PublicRoute>
                     }
                 />
@@ -24,18 +72,8 @@ function App() {
                     path="/register"
                     element={
                         <PublicRoute>
-                            <Register/>
+                            <Register />
                         </PublicRoute>
-                    }
-                />
-
-                {/*Protected*/}
-                <Route
-                    path="/"
-                    element={
-                        <ProtectedRoutes>
-                            <Home/>
-                        </ProtectedRoutes>
                     }
                 />
             </Routes>
@@ -43,4 +81,4 @@ function App() {
     );
 }
 
-export default App
+export default App;
