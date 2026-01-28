@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
 import PublicRoute from "./components/PublicRoute";
 import Layout from "./components/Layout.tsx";
+import Footer from "./components/Footer.tsx";
 
 function App() {
     return (
@@ -88,6 +89,8 @@ function App() {
                     }
                 />
             </Routes>
+
+            <Footer/>
         </BrowserRouter>
     );
 }
