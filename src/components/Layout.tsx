@@ -1,15 +1,20 @@
-import type {ReactNode} from "react";
 import Navbar from "./Navbar.tsx";
 import Footer from "./Footer.tsx"
 
-
-const Layout = ({children}: {children: ReactNode}) => {
+interface LayoutProps {
+    children: React.ReactNode;
+}
+const Layout = ({children}: LayoutProps) => {
 
     return (
-     <div className="min-h-screen flex flex-column">
-     <Navbar/>
-         <main className="flex-w p-4">{children}</main>
-     <Footer/>
+     <div className="min-h-screen flex-row">
+    <header>
+        <Navbar/>
+    </header>
+         <main className="flex-1 container px-4 py-8">{children}</main>
+     <footer>
+         <Footer/>
+     </footer>
         </div>
     );
 };

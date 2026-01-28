@@ -6,7 +6,7 @@ interface Props {
     children: JSX.Element;
 }
 const PublicRoute = ({children}: Props) => {
-    const {user} = useContext(AuthContext);
+    const {user} = useContext(AuthContext)!;
 
     if (user) {
         return <Navigate to="/" replace/>; //if already logged in -> Home

@@ -1,106 +1,53 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+// src/components/Navbar.tsx
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext);
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate("/login", { replace: true });
-    };
-
-    const linkClass =
-        "text-gray-600 hover:text-gray-900 transition-colors";
-
-    const activeClass =
-        "text-blue-600 font-semibold";
+    const { user, logout } = useContext(AuthContext)!;
 
     return (
-        <nav className="w-full bg-white border-b shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <nav className="bg-blue-600 text-white px-4 py-3 shadow-md">
+            <div className="container mx-auto flex justify-between items-center">
+                <div className="text-xl font-bold">
+                    <Link to="/">Somo Blog</Link>
+                </div>
 
-                {/* Logo */}
-                <Link to="/" className="text-xl font-bold text-blue-600">
-                    SomoBlog
-                </Link>
+                <div className="flex space-x-4">
 
-                {/* Links */}
-                <div className="flex items-center gap-6">
                     {user ? (
                         <>
-                            <NavLink
-                                to="/"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
+                            <Link to="/" className="hover:underline">
                                 Home
-                            </NavLink>
-
-                            <NavLink
-                                to="/blogs"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
+                            </Link>
+                            <Link to="/blogs" className="hover:underline">
                                 Blogs
-                            </NavLink>
+                            </Link>
 
-                            <NavLink
-                                to="/blogs/create"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
-                                Write
-                            </NavLink>
-
-                            <NavLink
-                                to="/saved"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
-                                Saved
-                            </NavLink>
-
-                            <NavLink
-                                to="/profile"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
+                            <Link to="/blogs/create" className="hover:underline">
+                                Create Blog
+                            </Link>
+                            <Link to="/saved" className="hover:underline">
+                                Saved Blogs
+                            </Link>
+                            <Link to="/profile" className="hover:underline">
                                 Profile
-                            </NavLink>
-
+                            </Link>
                             <button
-                                onClick={handleLogout}
-                                className="text-red-500 hover:text-red-700 transition-colors"
+                                onClick={logout}
+                                className="ml-2 bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
                             >
                                 Logout
                             </button>
                         </>
-                    ) : (
+                    ): (
                         <>
-                            <NavLink
-                                to="/login"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
+                            <Link to="/login" className="hover:underline">
                                 Login
-                            </NavLink>
-
-                            <NavLink
-                                to="/register"
-                                className={({ isActive }) =>
-                                    isActive ? activeClass : linkClass
-                                }
-                            >
+                            </Link>
+                            <Link to="/register" className="hover:underline">
                                 Register
-                            </NavLink>
+                            </Link>
                         </>
                     )}
                 </div>

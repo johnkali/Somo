@@ -1,5 +1,9 @@
+// src/App.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import PublicRoute from "./components/PublicRoute";
+
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -7,19 +11,12 @@ import Blogs from "./pages/Blogs";
 import CreateBlog from "./pages/CreateBlog";
 import SavedBlogs from "./pages/SavedBlogs";
 import Profile from "./pages/Profile";
-import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
-import PublicRoute from "./components/PublicRoute";
-import Layout from "./components/Layout.tsx";
-import Footer from "./components/Footer.tsx";
 
 function App() {
     return (
         <BrowserRouter>
-            {/* Navbar will be visible on all pages */}
-            <Navbar />
-
             <Routes>
-                {/* Protected routes */}
+                {/* Protected Routes */}
                 <Route
                     path="/"
                     element={
@@ -35,7 +32,7 @@ function App() {
                     element={
                         <ProtectedRoutes>
                             <Layout>
-                            <Blogs />
+                                <Blogs />
                             </Layout>
                         </ProtectedRoutes>
                     }
@@ -45,7 +42,7 @@ function App() {
                     element={
                         <ProtectedRoutes>
                             <Layout>
-                            <CreateBlog />
+                                <CreateBlog />
                             </Layout>
                         </ProtectedRoutes>
                     }
@@ -55,7 +52,7 @@ function App() {
                     element={
                         <ProtectedRoutes>
                             <Layout>
-                            <SavedBlogs />
+                                <SavedBlogs />
                             </Layout>
                         </ProtectedRoutes>
                     }
@@ -65,18 +62,20 @@ function App() {
                     element={
                         <ProtectedRoutes>
                             <Layout>
-                            <Profile />
+                                <Profile />
                             </Layout>
                         </ProtectedRoutes>
                     }
                 />
 
-                {/* Public routes */}
+                {/* Public Routes */}
                 <Route
                     path="/login"
                     element={
                         <PublicRoute>
-                            <Login />
+                            <Layout>
+                                <Login />
+                            </Layout>
                         </PublicRoute>
                     }
                 />
@@ -84,14 +83,15 @@ function App() {
                     path="/register"
                     element={
                         <PublicRoute>
-                            <Register />
+                            <Layout>
+                                <Register />
+                            </Layout>
                         </PublicRoute>
                     }
                 />
             </Routes>
-
-            <Footer/>
         </BrowserRouter>
+
     );
 }
 

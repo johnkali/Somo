@@ -8,7 +8,7 @@ import {AuthContext} from "../context/AuthContext.tsx";
     const [password, setPassword] = useState('')
 
     //if already logged in
- const {login} = useContext(AuthContext);
+ const {login} = useContext(AuthContext)!;
  const navigate = useNavigate();
 
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{

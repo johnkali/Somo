@@ -6,7 +6,7 @@ import  jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-//Register user
+//Register user controller
 router.post('/register', async (req, res) => {
 
     try {
@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
         //Check if user already exists
         const userExists = await User.findOne({ email: email });
         if(userExists) {
-            return res.status(400).json({message: 'Email already registered!'});
+            return res.status(400).json({message: 'Email already exists!'});
         }
 
         //Hash password
@@ -36,18 +36,35 @@ router.post('/register', async (req, res) => {
             password: hashedPassword,
         });
 
-        //respond to FE
-        res.status(200).json({
-            message: 'User successfully registered!',
-            userId: user.id,
+
+
+        //return jws along with created user
+        const JWT_SECRET="supersecretkey123"
+
+        const token = jwt.sign({id: user._id}, JWT_SECRET, {
+            expiresIn: '1d',
         });
+
+        res.status(201).json({
+            message: 'User successfully registered!',
+            user: {
+                _id: user._id,
+                firstName: user.firstName,
+                secondName: user.secondName,
+                email: user.email,
+            },
+            token,
+        });
+
+
     }catch(err) {
-    res.status(500).json({message: err.message});
+        console.error("REGISTER ERROR:", err);
+        res.status(500).json({ message: "Server error" });
     }
 })
 
 
-//Login user
+//Login user controller
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -80,11 +97,11 @@ router.post('/login', async (req, res) => {
     )
 
         //return token + user info
-        res.status(200).json({
+        res.status(201).json({
             message: 'User successfully logged in successfully!',
             token,
             user: {
-                id: foundUser._id,
+                _id: foundUser._id,
                 firstName: foundUser.firstName,
                 secondName: foundUser.secondName,
                 email: foundUser.email

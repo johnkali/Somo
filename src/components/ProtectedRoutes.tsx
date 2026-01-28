@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ProtectedRoutes = ({children}: Props) => {
-    const {user} = useContext(AuthContext)
+    const {user} = useContext(AuthContext)!;
 
     if(!user){
         return <Navigate to="/login" replace />;
