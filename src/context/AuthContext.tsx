@@ -11,13 +11,10 @@ export const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<any>(null);
-
-    useEffect(() => {
-        const token = localStorage.getItem("token");
+    const [user, setUser] = useState(()=>{
         const userData = localStorage.getItem("user");
-        if (token && userData) setUser(JSON.parse(userData));
-    }, []);
+        return userData ? JSON.parse(userData) : null;
+    })
 
     return (
         <AuthContext.Provider value={{ user, setUser }}>

@@ -69,6 +69,7 @@ router.post('/login', async (req, res) => {
         if(!isMatch) {
             return res.status(400).json({message: 'Invalid email or password-P!'});
         }
+
         const JWT_SECRET="supersecretkey123"
 
         //generate jtw
