@@ -11,14 +11,13 @@ import {AuthContext} from "../context/AuthContext.tsx";
  const {login} = useContext(AuthContext)!;
  const navigate = useNavigate();
 
-    const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
-        e.preventDefault();
 
+    const handleSubmit = async (e: React.FormEvent)=>{
+        e.preventDefault();
+        
         try {
             const res = await api.post("/auth/login", { email, password });
             console.log("LOGIN RESPONSE:", res.data);
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user))
 
             login(res.data.user, res.data.token); //update context
             //redirect to homepage
@@ -42,7 +41,7 @@ import {AuthContext} from "../context/AuthContext.tsx";
                   Enter your details below
               </p>
 
-              <form  className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                   {/* Email */}
                   <div>
                       <label
@@ -84,7 +83,7 @@ import {AuthContext} from "../context/AuthContext.tsx";
                   <div>
                       <button
                           type="submit"
-                          onSubmit={handleSubmit}
+                        //   onSubmit={handleSubmit}
                           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors font-semibold"
                       >
                           Login

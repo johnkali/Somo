@@ -69,7 +69,6 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
-
         // validate
         if(!email || !password) {
             return res.status(400).json({message: 'All fields are required!'});
@@ -82,7 +81,7 @@ router.post('/login', async (req, res) => {
         }
 
         //compare passwords
-        const isMatch = await  bcrypt.compare(password, foundUser.password);
+        const isMatch = await bcrypt.compare(password, foundUser.password);
         if(!isMatch) {
             return res.status(400).json({message: 'Invalid email or password-P!'});
         }
@@ -98,14 +97,12 @@ router.post('/login', async (req, res) => {
 
         //return token + user info
         res.status(201).json({
-            message: 'User successfully logged in successfully!',
-            token,
             user: {
                 _id: foundUser._id,
                 firstName: foundUser.firstName,
                 secondName: foundUser.secondName,
                 email: foundUser.email
-            }
+            },token,
         });
     }catch(err) {
         console.error("LOGIN ERROR:", err);
