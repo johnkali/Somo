@@ -1,20 +1,21 @@
 import api from '../services/api.ts'
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import {AuthContext} from "../context/AuthContext.tsx";
 
  function Login () {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-     const navigate = useNavigate();
 
     //if already logged in
-     useEffect(() => {
-         const token = localStorage.getItem("token");
-         if(token){
-             navigate("/");
-         }
-     }, []);
+ const {user} = useContext(AuthContext);
+ const navigate = useNavigate();
 
+     useEffect(() => {
+         if (user){
+             navigate('/');
+         }
+     }, [user]);
     const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault();
 
