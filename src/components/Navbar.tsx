@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext.tsx";
 import {useContext} from "react";
 
 function Navbar() {
 const { user, setUser } = useContext(AuthContext);
+const navigate = useNavigate();
 
 const logout = () => {
-    localStorage.clear()
+    localStorage.clear();
     setUser(null);
+    navigate("/login", { replace: true }); //force redirect
 };
     return (
         <nav>

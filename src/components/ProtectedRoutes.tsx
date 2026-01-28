@@ -1,14 +1,15 @@
 import  {Navigate} from "react-router-dom";
-import type {JSX} from "react";
+import {type JSX, useContext} from "react";
+import {AuthContext} from "../context/AuthContext.tsx";
 
 interface Props {
     children: JSX.Element;
 }
 
 const ProtectedRoutes = ({children}: Props) => {
-    const token = localStorage.getItem("token");
+    const {user} = useContext(AuthContext)
 
-    if(!token){
+    if(!user){
         return <Navigate to="/login" replace />;
     }
     return children
