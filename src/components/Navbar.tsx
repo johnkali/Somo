@@ -1,29 +1,27 @@
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext.tsx";
 import {useContext} from "react";
 
 function Navbar() {
-const { user, setUser } = useContext(AuthContext);
+const { user, logout } = useContext(AuthContext);
 const navigate = useNavigate();
 
-const logout = () => {
-    localStorage.clear();
-    setUser(null);
-    navigate("/login", { replace: true }); //force redirect
-};
+const handleLogout = () => {
+    logout();
+    navigate("/login", {replace: true}); //force redirect
+}
     return (
         <nav>
             <h1>Somo Blogs</h1>
             <div>
                 {user ? (
                     <>
-                        <Link to="/">Home</Link>
-                        <button onClick={logout}>Logout</button>
+                        <button onClick={handleLogout}>Logout</button>
                     </>
                 ) : (
                     <>
-                        <Link to="/login">Login</Link>
-                        <Link to="/register">Register</Link>
+                        <a href="/login">Login</a>
+                        <a href="/register">Register</a>
                     </>
                 )}
             </div>

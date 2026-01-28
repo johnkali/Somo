@@ -1,16 +1,18 @@
 import {Navigate} from "react-router-dom";
-import type {JSX} from "react";
+import {type JSX, useContext} from "react";
+import {AuthContext} from "../context/AuthContext.tsx";
 
 interface Props {
     children: JSX.Element;
 }
 const PublicRoute = ({children}: Props) => {
-const token  = localStorage.getItem("token");
+    const {user} = useContext(AuthContext);
 
-if (token)
-    return <Navigate to="/"  replace />; //if already logged in -> Home
+    if (user) {
+        return <Navigate to="/" replace/>; //if already logged in -> Home
+    }
     return children;
-}
 
+}
 
 export default PublicRoute;
