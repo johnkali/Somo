@@ -34,8 +34,8 @@ import {Link} from "react-router-dom";
         },
     ];
     function Home() {
-
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+
 
         return (
             <>
