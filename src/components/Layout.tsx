@@ -11,7 +11,7 @@ const Layout = ({children}: LayoutProps) => {
     <header>
         <Navbar/>
     </header>
-         <main className="flex-1 container">{children}</main>
+         <main className="flex-1">{children}</main>
      <footer>
          <Footer/>
      </footer>

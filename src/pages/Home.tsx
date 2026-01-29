@@ -4,13 +4,14 @@ import {Link} from "react-router-dom";
         {
             id: 1,
             title: "Understanding JWT Authentication",
-            author: "John Kali",
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
             date: "Jan 20, 2026",
             image: "https://picsum.photos/seed/picsum/200/300",
         },
         {
             id: 2,
             title: "React Context Explained Simply",
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
             author: "Jane Doe",
             date: "Jan 18, 2026",
             image: "https://picsum.photos/200/300?grayscale",
@@ -18,6 +19,7 @@ import {Link} from "react-router-dom";
         {
             id: 3,
             title: "Building Secure APIs with Express",
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
             author: "Alex Smith",
             date: "Jan 15, 2026",
             image: "https://picsum.photos/id/1/200/300",
@@ -25,6 +27,7 @@ import {Link} from "react-router-dom";
         {
             id: 4,
             title: "MongoDB Basics for Beginners",
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
             author: "Mary Wanjiku",
             date: "Jan 10, 2026",
             image: "https://picsum.photos/id/3/200/300",
@@ -79,12 +82,12 @@ import {Link} from "react-router-dom";
 
                 <main className="bg-gray-50 min-h-screen">
                     <section className="max-w-7xl mx-auto px-4 py-8">
-                        <h1 className="text-3xl font-bold">Welcome, {user.firstName}</h1>
+                        <h1 className="text-3xl font-bold  mb-4">Welcome, {user.firstName}</h1>
                         <p className="text-gray-700">
                             Explore amazing blogs, create your own, and save your favorites.
                         </p>
                     </section>
-                    <section className="max-w-7xl mx-auto px-4 py-16">
+                    <section className="max-w-7xl mx-auto px-4 py-8">
                         <h2 className="text-2xl font-bold text-gray-800 mb-8">
                             Latest Articles
                         </h2>
@@ -112,6 +115,8 @@ import {Link} from "react-router-dom";
                                         <h3 className="text-lg font-semibold text-gray-800 mb-4">
                                             {blog.title}
                                         </h3>
+
+                                        <p className="text-sm font-normal text-gray-700 mb-4">{blog.text}</p>
 
                                         {/* Push button to bottom */}
                                         <div className="mt-auto">

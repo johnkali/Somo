@@ -1,5 +1,7 @@
 import {createContext, useState} from "react";
 
+//global state for authentication
+
 interface AuthContextType{
     user: any;
     login: (userData: any, token: string) => void;
