@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 //Create Blog
-router.post("/", protect, async (req, res) => {
+router.post("/blogs", protect, async (req, res) => {
     try {
         const {title, content, image} = req.body;
 
