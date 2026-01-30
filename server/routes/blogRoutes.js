@@ -5,8 +5,8 @@ import {protect} from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 
-//Create Blog
-router.post("/blogs", protect, async (req, res) => {
+//Create Blogs
+router.post("/", protect, async (req, res) => {
     try {
         const {title, content, image} = req.body;
 
@@ -26,6 +26,20 @@ router.post("/blogs", protect, async (req, res) => {
     }catch(err) {
         console.error("CREATE BLOG ERROR",err);
         res.status(500).send({message: "Internal Server Error"});
+    }
+})
+
+//Get blogs from db
+router.get("/", async (req, res) => {
+    try {
+        const blogs = await Blog.find()
+            .populate("author", "firstName") //get author details
+            .sort({createdAt: -1}); // newest first
+        // console.log(blogs);
+        res.json(blogs);
+    }catch(err) {
+        console.error("FETCH BLOG ERROR",err);
+        res.status(500).send({message: "Failed to fetch blogZZ"});
     }
 })
 

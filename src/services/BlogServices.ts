@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//url to get external blog posts toout home
+//url to get external blog posts to our home
 
 const BLOG_API_URL =  "https://jsonplaceholder.typicode.com/";
 

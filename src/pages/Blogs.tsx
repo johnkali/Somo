@@ -3,10 +3,10 @@
 function Blogs() {
     return (
         <article className="max-w-3xl mx-auto p-6  my-10 bg-gray-100 rounded-2xl shadow-md">
-            {/* Blog Header */}
+            {/* Blogs Header */}
             <header className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Building My First Blog Post Layout with Semantic HTML
+                    Building My First Blogs Post Layout with Semantic HTML
                 </h1>
                 <p className="text-sm text-gray-500">
                     Published on <span className="font-medium">August 10, 2026</span> · by{" "}
@@ -17,7 +17,7 @@ function Blogs() {
             {/* Featured Image */}
             <img
                 src="https://picsum.photos/id/5/200/300"
-                alt="Blog cover"
+                alt="Blogs cover"
                 className="h-100 w-full object-cover"
             />
 

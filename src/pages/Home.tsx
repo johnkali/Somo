@@ -1,30 +1,50 @@
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getExternalBlogs} from "../services/BlogServices.ts";
-import {mapExternalBlog} from "../utils/blogMapper.ts";
+// import {getExternalBlogs} from "../services/BlogServices.ts";
+import type {UnifiedBlog} from '../types/UnifiedBlog.ts';
+import api from "../services/api.ts";
 
-interface Blog {
-    id: number;
-    title: string;
-    content: string;
-    author: string;
-    date: string;
-    image: string;
-}
 
 function Home() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [blogs, setBlogs] = useState<UnifiedBlog[]>([]);
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const fetchBlogs = async ()=>{
             try{
-                const data  =  await getExternalBlogs(); //from e blog services
-                const enrichedBlogs = data.slice(0,7).map(mapExternalBlog); //only show # on homepage
-                setBlogs(enrichedBlogs);
-                console.log("RAW BLOG:", data[0]);
-                console.log("MAPPED BLOG:", enrichedBlogs[0]);
+                // 1. Fetch Mongo Blogs
+                    const mongoRes = await api.get("/blogs");
+                const mongoBlogs: UnifiedBlog[] = mongoRes.data.map((blog: any)=>({
+                    id: blog.id,
+                    title: blog.title,
+                    content: blog.content,
+                    image: blog.image || "https://picsum.photos/seed/picsum/200/300",
+                    author: blog.author?.firstName,
+                    date: blog.createdAt,
+                    source: "mongo",
+                }));
+
+                // 2. Fetch External Blogs
+                const externalRes = await fetch(
+                    "https://dev.to/api/articles?per_page=4"
+                ); //from e blog services
+                const externalData = await externalRes.json();
+                console.log(externalData);
+
+                const externalBlogs: UnifiedBlog[] = externalData.map((blog: any)=>({
+                    id: blog.id.toString(),
+                    title: blog.title,
+                    content: blog.description,
+                    image: blog.cover_image,
+                    author: blog.user.name,
+                    date: blog.published_at,
+                    source: "external",
+                }));
+
+                //Merge
+                setBlogs([...mongoBlogs, ...externalBlogs]);
             }catch (error){
                 console.error("Failed to load blogs", error);
             }finally {
@@ -93,35 +113,37 @@ function Home() {
 
                         {/* BLOG GRID */}
                         {loading ? (<p>Loading blogs...</p>):(
+
                             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                                 {blogs.map((blog) => (
                                     <article
-                                        key={blog.id}
+                                        key={`${blog.source}-${blog.id}`}
                                         className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
                                     >
-                                        {/* Blog Image */}
+                                        {/* Blogs Image */}
                                         <img
                                             src={blog.image}
                                             alt={blog.title}
                                             className="h-48 w-full object-cover"
                                         />
 
-                                        {/* Blog Content */}
+                                        {/* Blogs Content */}
                                         <div className="p-5 flex flex-col flex-1">
                                             <p className="text-sm text-gray-500 mb-2">
-                                                {blog.date} • {user.firstName}
+                                                By {user.author} • {" "}
+                                                {new Date(blog.date).toLocaleDateString()}
                                             </p>
 
                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
                                                 {blog.title}
                                             </h3>
 
-                                            <p className="text-sm font-normal text-gray-700 mb-4">{blog.content}</p>
+                                            <p className="text-sm font-normal text-gray-700 mb-4 ">{blog.content}</p>
 
                                             {/* Push button to bottom */}
                                             <div className="mt-auto">
                                                 <Link
-                                                    to={`/blogs/${blog.id}`}
+                                                    to={`/blogs/${blog.source}-${blog.id}`}
                                                     className="inline-block text-blue-600 font-medium hover:underline"
                                                 >
                                                     Read more →

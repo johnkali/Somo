@@ -1,4 +1,4 @@
-# Full-Stack Blog Platform (React + Express)
+# Full-Stack Blogs Platform (React + Express)
 
 A modern full-stack blog application built using **React** on the frontend and **Express.js** on the backend.  
 The platform supports authentication, blog management, user interactions, and content from external APIs.
@@ -12,7 +12,7 @@ The platform supports authentication, blog management, user interactions, and co
 - JWT-based authentication
 - Protected routes (only logged-in users can create, comment, save, or star blogs)
 
-### 📝 Blog Management
+### 📝 Blogs Management
 - Create, edit, and delete blogs
 - Fetch blogs from external public blog APIs
 - Store user-created blogs in the database
