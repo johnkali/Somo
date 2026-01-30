@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from './models/User';
+import Users from '../models/Users.js';
 
 const JWT_SECRET = "supersecretkey123"; //rem to move to env later
 
@@ -16,7 +16,7 @@ export  const protect = async (req, res, next) => {
 
        const decoded = jwt.verify(token, JWT_SECRET);
 
-       req.user = await User.findById(decoded.id).select("-password");
+       req.user = await Users.findById(decoded.id).select("-password");
        next();
    } catch (error){
     res.status(401).json({message: 'Invalid token'});
