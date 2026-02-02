@@ -17,7 +17,7 @@ function Home() {
                 // 1. Fetch Mongo Blogs
                     const mongoRes = await api.get("/blogs");
                 const mongoBlogs: UnifiedBlog[] = mongoRes.data.map((blog: any)=>({
-                    id: blog.id,
+                    id: blog._id,
                     title: blog.title,
                     content: blog.content,
                     image: blog.image || "https://picsum.photos/seed/picsum/200/300",
@@ -143,7 +143,7 @@ function Home() {
                                             {/* Push button to bottom */}
                                             <div className="mt-auto">
                                                 <Link
-                                                    to={`/blogs/${blog.source}-${blog.id}`}
+                                                    to={`/blogs/${blog.source}/${blog.id}`}
                                                     className="inline-block text-blue-600 font-medium hover:underline"
                                                 >
                                                     Read more →
