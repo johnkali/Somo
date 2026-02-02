@@ -11,6 +11,7 @@ import Blogs from "./pages/Blogs";
 import CreateBlog from "./pages/CreateBlog";
 import SavedBlogs from "./pages/SavedBlogs";
 import Profile from "./pages/Profile";
+import BlogDetails from "./pages/BlogDetails.tsx";
 
 function App() {
     return (
@@ -67,6 +68,15 @@ function App() {
                         </ProtectedRoutes>
                     }
                 />
+                <Route
+                path="/blogs/:source/:id"
+                element={
+                    <ProtectedRoutes>
+                        <Layout>
+                            <BlogDetails/>
+                        </Layout>
+                    </ProtectedRoutes>
+                }/>
 
                 {/* Public Routes */}
                 <Route

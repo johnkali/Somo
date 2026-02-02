@@ -13,7 +13,7 @@ function Home() {
 
     useEffect(() => {
         const fetchBlogs = async ()=>{
-            try{
+           try{
                 // 1. Fetch Mongo Blogs
                     const mongoRes = await api.get("/blogs");
                 const mongoBlogs: UnifiedBlog[] = mongoRes.data.map((blog: any)=>({
@@ -28,7 +28,7 @@ function Home() {
 
                 // 2. Fetch External Blogs
                 const externalRes = await fetch(
-                    "https://dev.to/api/articles?per_page=4"
+                    "https://dev.to/api/articles?per_page=7"
                 ); //from e blog services
                 const externalData = await externalRes.json();
                 console.log(externalData);
