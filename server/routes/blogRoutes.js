@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
         const blogs = await Blog.find()
             .populate("author", "firstName") //get author details
             .sort({createdAt: -1}); // newest first
-        // console.log(blogs);
+        console.log(blogs);
         res.json(blogs);
     }catch(err) {
         console.error("FETCH BLOG ERROR",err);
@@ -43,5 +43,19 @@ router.get("/", async (req, res) => {
     }
 })
 
+router.get("/:id", protect, async (req, res) => {
+    try {
+        const blog = await  Blog.findById(req.params.id);
+        if (!blog) {
+            return res.status(404).send("No blog found!");
+        }
+        res.status(200).json(blogs);
+
+    }catch (error){
+        console.error("FETCH BLOG ERROR",error);
+        res.status(500).send({message: "Server Error"});
+    }
+
+})
 export default router;
 
