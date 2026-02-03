@@ -1,6 +1,6 @@
 import express from 'express';
 import Blog from '../models/Blogs.js';
-import {protect} from "../middleware/authMiddleware.js";
+import {protect} from '../middleware/authMiddleware.js'
 
 const router = express.Router();
 
@@ -49,7 +49,7 @@ router.get("/:id", protect, async (req, res) => {
         if (!blog) {
             return res.status(404).send("No blog found!");
         }
-        res.status(200).json(blogs);
+        res.status(200).json(blog);
 
     }catch (error){
         console.error("FETCH BLOG ERROR",error);
