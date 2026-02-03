@@ -11,12 +11,12 @@ const BlogDetails = () => {
 
     useEffect(() => {
         const fetchBlog =  async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                alert("You must be logged in to create a blog");
-                return;
-            }
+            // const token = localStorage.getItem("token");
+            //
+            // if (!token) {
+            //     alert("You must be logged in to create a blog");
+            //     return;
+            // }
             try{
 
 

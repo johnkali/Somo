@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
         const blogs = await Blog.find()
             .populate("author", "firstName") //get author details
             .sort({createdAt: -1}); // newest first
-        console.log(blogs);
+        console.log(blogs)/;
         res.json(blogs);
     }catch(err) {
         console.error("FETCH BLOG ERROR",err);

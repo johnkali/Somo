@@ -55,6 +55,9 @@ function Home() {
         fetchBlogs();
     }, []);
 
+    const truncateText = (text: string, length = 150) => {
+        return text.length > length ? text.substring(0, length) + "..." : text;
+    }
 
         return (
             <>
@@ -138,7 +141,7 @@ function Home() {
                                                 {blog.title}
                                             </h3>
 
-                                            <p className="text-sm font-normal text-gray-700 mb-4 ">{blog.content}</p>
+                                            <p className="text-sm font-normal text-gray-700 mb-4 ">{truncateText(blog.content)}</p>
 
                                             {/* Push button to bottom */}
                                             <div className="mt-auto">
