@@ -21,7 +21,7 @@ const userSchema =  new mongoose.Schema({
     },
     favorites: [
         {
-            type: mongoose.schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Blogs",
         },
         ],
