@@ -48,12 +48,12 @@ const BlogDetails = () => {
 
             <p className="text-gray-500">
                 By {blog.author?.firstName || blog.user?.name} • {" "}
-                {new Date(blog.created_at.getFullYear() || blog.published_at
+                {new Date(blog.createdAt || blog.publishedAt
                 ).toLocaleDateString()}
             </p>
 
                 {blog.image || blog.cover_image ? (
-                    <img src={blog.image || blog.cover_image} alt="" className="w-full rounded-xl"/>
+                    <img src={blog.image || blog.cover_image} alt="" className="w-full h-[500px] object-cover rounded-xl"/>
                 ): null}  {/* Add dummy image toa null   */}
 
            <div className="prose max-w-none">
