@@ -19,7 +19,20 @@ const userSchema =  new mongoose.Schema({
         type: String,
         required: true,
     },
-});
+    favorites: [
+        {
+            type: mongoose.schema.Types.ObjectId,
+            ref: "Blogs",
+        },
+        ],
+    lastLoginAt: {
+        type: Date,
+        default: Date.now,
+    },
+},
+    {timestamps: true}
+
+);
 
 export  default mongoose.model('Users', userSchema);
 

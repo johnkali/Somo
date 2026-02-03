@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/Users.js';
+import Blog from '../models/Blog.js';
 import  bcrypt from 'bcryptjs';
 import  jwt from 'jsonwebtoken';
 
@@ -106,6 +107,27 @@ router.post('/login', async (req, res) => {
         });
     }catch(err) {
         console.error("LOGIN ERROR:", err);
+        res.status(500).json({message: "Internal server error!"});
+    }
+})
+
+//GET /api/users/profile
+router.get('/profile', async (req, res) => {
+    try {
+        //get user info
+        const user =  await User.findById(req.user.id)
+            .select("-password")
+                .populate("favorites");
+
+        //get blogs created by user
+        const blogs = await Blog.find({author: req.user.id}).sort({ createdAt: -1 });
+        res.json({
+            user,
+            blogs,
+            blogCount: blogs.length,
+        });
+    }catch(err) {
+        console.error("PROFILE ERROR:", err);
         res.status(500).json({message: "Internal server error!"});
     }
 })
