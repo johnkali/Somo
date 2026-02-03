@@ -1,8 +1,9 @@
 import express from 'express';
-import User from '../models/Users.js';
-import Blog from '../models/Blog.js';
+import Users from '../models/Users.js';
+import Blogs from '../models/Blogs.js';
 import  bcrypt from 'bcryptjs';
 import  jwt from 'jsonwebtoken';
+import {protect} from '../middleware/authMiddleware.js'
 
 
 const router = express.Router();
@@ -21,7 +22,7 @@ router.post('/register', async (req, res) => {
         }
 
         //Check if user already exists
-        const userExists = await User.findOne({ email: email });
+        const userExists = await Users.findOne({ email: email });
         if(userExists) {
             return res.status(400).json({message: 'Email already exists!'});
         }
@@ -30,7 +31,7 @@ router.post('/register', async (req, res) => {
         const hashedPassword =  await bcrypt.hash(password, 10);
 
         //create user | save data to db
-        const user =  await User.create({
+        const user =  await Users.create({
             firstName: firstName,
             secondName: secondName,
             email,
@@ -76,7 +77,7 @@ router.post('/login', async (req, res) => {
         }
 
         //find user
-        const foundUser =  await User.findOne({ email });
+        const foundUser =  await Users.findOne({ email });
         if(!foundUser) {
             return res.status(400).json({message: 'Invalid email or password-E!'});
         }
@@ -112,15 +113,15 @@ router.post('/login', async (req, res) => {
 })
 
 //GET /api/users/profile
-router.get('/profile', async (req, res) => {
+router.get('/profile', protect, async (req, res) => {
     try {
         //get user info
-        const user =  await User.findById(req.user.id)
+        const user =  await Users.findById(req.user.id)
             .select("-password")
                 .populate("favorites");
 
         //get blogs created by user
-        const blogs = await Blog.find({author: req.user.id}).sort({ createdAt: -1 });
+        const blogs = await Blogs.find({author: req.user.id}).sort({ createdAt: -1 });
         res.json({
             user,
             blogs,
