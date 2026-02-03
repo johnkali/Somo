@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import api from '../services/api.ts'
 
 
@@ -8,6 +8,7 @@ const BlogDetails = () => {
         const {id, source} =  useParams();
         const [blog, setBlog] = useState<any>(null);
         const [loading, setLoading] = useState<boolean>(false);
+        const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBlog =  async () => {
@@ -43,6 +44,14 @@ const BlogDetails = () => {
     if(!blog) return <p>Blog not found</p>
 
     return (
+        <div className="max-w-3xl mx-auto px-4 py-8">
+            <button
+                onClick={() => navigate(-1)}
+                className="text-blue-600 mb-4 hover:underline"
+            >
+                ← Back
+            </button>
+
         <article className="max-w-4xl mx-auto py-10 space-y-6">
             <h1 className="text-4xl font-bold">{blog.title}</h1>
 
@@ -60,6 +69,7 @@ const BlogDetails = () => {
                {blog.content || blog.body_markdown}
            </div>
         </article>
+        </div>
     );
 };
 
