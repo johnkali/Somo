@@ -1,6 +1,7 @@
 import express from 'express';
-import Blog from '../models/Blogs.js';
+import Blogs from '../models/Blogs.js';
 import {protect} from '../middleware/authMiddleware.js'
+import Users from "../models/Users.js";
 
 const router = express.Router();
 
@@ -15,17 +16,22 @@ router.post("/", protect, async (req, res) => {
             return res.status(401).send("All fields are required!");
         }
         // create blog -> DB
-        const blog = await Blog.create({
+        const blog = await Blogs.create({
             title,
             content,
             image,
             author: req.user._id, //comes from token that we received from FE via the authMiddleware
         });
 
-        res.status(200).send(blog); //will use later to display this returned blog to users/homepage
+        //attach blog to user
+        await Users.findByIdAndUpdate(req.user.id,{
+            $push: {blogs: blog._id},
+        })
+
+        res.status(200).json(blog); //will use later to display this returned blog to users/homepage
     }catch(err) {
         console.error("CREATE BLOG ERROR",err);
-        res.status(500).send({message: "Internal Server Error"});
+        res.status(500).json({message: "Internal Server Error"});
     }
 })
 
@@ -45,7 +51,7 @@ router.get("/", protect,async (req, res) => {
 
 router.get("/:id", protect, async (req, res) => {
     try {
-        const blog = await  Blog.findById(req.params.id);
+        const blog = await  Blogs.findById(req.params.id);
         if (!blog) {
             return res.status(404).json("No blog found!");
         }
