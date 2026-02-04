@@ -35,7 +35,7 @@ router.get("/", protect,async (req, res) => {
         const blogs = await Blog.find()
             .populate("author", "firstName") //get author details
             .sort({createdAt: -1}); // newest first
-        console.log(blogs);
+        // console.log(blogs);
         res.json(blogs);
     }catch(err) {
         console.error("FETCH BLOG ERROR",err);
@@ -58,39 +58,6 @@ router.get("/:id", protect, async (req, res) => {
 
 })
 
-//Toggle save/unsave blog
-router.post("/:id/save", protect, async (req, res) => {
-    try {
-        const blogId = req.params.id;
-        const userId = req.user._id;
 
-        const user  =  await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).send("No user found!");
-        }
-
-        const isSaved = user.favorites.includes(blogId);
-
-        if (isSaved) {
-            //unsave
-            user.favorites =  user.favorites.filter(
-                (id) => id.toString() !== blogId);
-        }else {
-            //save
-            user.favorites.push(blogId);
-        }
-
-        await user.save();
-
-        res.json({
-            message: isSaved ? "Blog Unsaved!" : "Blog Saved!",
-            favorites: user.favorites,
-        });
-    }catch (error) {
-        console.error("SAVE BLOG ERROR",error);
-        res.status(500).json({message: "Server Error"});
-    }
-})
 export default router;
 

@@ -1,73 +1,160 @@
-import {useEffect, useState} from "react";
-import api from "../services/api.ts";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import api from "../services/api";
+import { Link } from "react-router-dom";
+
+interface Blog {
+    id: string;
+    title: string;
+    content: string;
+    image: string;
+    author: string;
+    date: string;
+    source: string;
+}
 
 const Profile = () => {
-    const [profile, setProfile] = useState<any>(null);
+    const authContext = useContext(AuthContext);
+    const user = authContext?.user;
+
+    const [favorites, setFavorites] = useState<Blog[]>([]);
+    const [userBlogs, setUserBlogs] = useState<Blog[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProfile =  async ()=>{
-            const res = await api.get("/users/profile");
+        const fetchProfileData = async () => {
+            if (!user) return;
+            try {
+                // Fetch user profile info including blogs and favorites
+                const res = await api.get("/users/profile");
+                const profileData = res.data;
 
-            setProfile(res.data);
-            console.log(res.data);
+                // Normalize blogs and favorites to ensure IDs and sources
+                const normalizeBlog = (blog: any): Blog => ({
+                    id: blog._id?.toString() || blog.id?.toString() || new Date().getTime().toString(),
+                    title: blog.title || "Untitled",
+                    content: blog.content || "",
+                    image: blog.image || "https://picsum.photos/seed/picsum/200/300",
+                    author: blog.author?.firstName || blog.author || "Unknown",
+                    date: blog.createdAt || blog.date || new Date().toISOString(),
+                    source: blog.source || "mongo",
+                });
+
+                setFavorites((profileData.favorites || []).map(normalizeBlog));
+                setUserBlogs((profileData.blogs || []).map(normalizeBlog));
+            } catch (err) {
+                console.error("Failed to fetch profile data", err);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchProfile();
-    }, []);
 
-    if (!profile) {
-        return <p>Loading profile...</p>
+        fetchProfileData();
+    }, [user]);
+
+    if (!user) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-gray-700">You must be logged in to view your profile.</p>
+            </div>
+        );
     }
-    const {user, blogs, blogCount} = profile;
 
     return (
-        <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
-        {/*    User info*/}
-            <section className="bg-white p-6 rounded shadow">
-                <h2 className="text-2xl font-bold mb-2">
-                   <span className="text-gray-500 text-[20px]">User Name:</span> {user.firstName} {user.secondName}
-                </h2>
-                <p className="text-sm text-gray-600"><span className="text-gray-500 text-[20px] font-bold">E-mail:</span> {user.email}</p>
-                <p className="text-sm text-gray-600"><span className="text-gray-500 text-[20px] font-bold">Last Login: </span>{new Date(user.lastLoginAt).toDateString()}</p>
-                <p className="mt-2 font-medium"><span className="text-gray-500 font-bold text-sm">Blogs Created: </span>{blogCount}</p>
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <header className="bg-gray-900 text-white py-8">
+                <div className="max-w-5xl mx-auto px-4 text-center">
+                    <h1 className="text-3xl font-bold mb-2">Profile</h1>
+                    <p className="text-gray-300">
+                        Welcome, {user.firstName} {user.secondName}
+                    </p>
+                </div>
+            </header>
+
+            {/* User Info */}
+            <section className="max-w-5xl mx-auto px-4 py-8 bg-white rounded-lg shadow-md mt-6">
+                <h2 className="text-2xl font-semibold mb-4">User Details</h2>
+                <ul className="text-gray-700 space-y-2">
+                    <li>
+                        <strong>Email:</strong> {user.email}
+                    </li>
+                    <li>
+                        <strong>First Name:</strong> {user.firstName}
+                    </li>
+                    <li>
+                        <strong>Second Name:</strong> {user.secondName}
+                    </li>
+                    <li>
+                        <strong>Number of Blogs:</strong> {userBlogs.length}
+                    </li>
+                    <li>
+                        <strong>Last Login:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleString() : "N/A"}
+                    </li>
+                </ul>
             </section>
 
-        {/*    User blogs*/}
-            <section>
-                <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
-
-                {blogs.length === 0 ? (
-                    <p className="text-gray-500">You haven't written any blogs yet!</p>
-                ):(
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {blogs.map((blog: any)=>(
-                            <div key={blog._id} className="border p-4 rounded">
-                                <h4 className="font-bold">{blog.title}</h4>
-                                <p className="text-sm text-gray-500">
-                                    {new Date(blog.createdAt).toDateString()}
-                                </p>
-                                <p className="text-gray-600 mt-2">
-                                    {blog.content.substring(0, 120)}...
-                                </p>
-                            </div>
+            {/* Favorites */}
+            <section className="max-w-5xl mx-auto px-4 py-8">
+                <h2 className="text-2xl font-semibold mb-6">Saved Blogs</h2>
+                {loading ? (
+                    <p>Loading favorites...</p>
+                ) : favorites.length === 0 ? (
+                    <p className="text-gray-500">You have no saved blogs yet.</p>
+                ) : (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {favorites.map((blog) => (
+                            <article
+                                key={`${blog.source}-${blog.id}`}
+                                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+                            >
+                                <img src={blog.image} alt={blog.title} className="h-40 w-full object-cover" />
+                                <div className="p-4 flex flex-col flex-1">
+                                    <h3 className="font-semibold text-lg mb-2">{blog.title}</h3>
+                                    <p className="text-gray-600 text-sm mb-2">
+                                        By {blog.author} • {new Date(blog.date).toLocaleDateString()}
+                                    </p>
+                                    <Link
+                                        to={`/blogs/${blog.source}/${blog.id}`}
+                                        className="mt-auto text-blue-600 hover:underline font-medium"
+                                    >
+                                        Read More →
+                                    </Link>
+                                </div>
+                            </article>
                         ))}
                     </div>
                 )}
             </section>
 
-            {/*Favorites*/}
-            <section>
-                <h3 className="text-xl font-semibold mb-4">Saved Blogs</h3>
-                {user.favorites.length === 0 ? (
-                    <p className="text-gray-500">No saved blogs yet.</p>
-                ): (
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {user.favorites.map((blog: any)=>(
-                            <div key={blog._id} className="border p-4 rounded">
-                                <h4 className="font-bold">{blog.title}</h4>
-                                <p className="text-sm text-gray-500">
-                                    {blog.content.substring(0, 120)}...
-                                </p>
-                            </div>
+            {/* User Blogs */}
+            <section className="max-w-5xl mx-auto px-4 py-8">
+                <h2 className="text-2xl font-semibold mb-6">Your Blogs</h2>
+                {loading ? (
+                    <p>Loading your blogs...</p>
+                ) : userBlogs.length === 0 ? (
+                    <p className="text-gray-500">You haven't created any blogs yet.</p>
+                ) : (
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {userBlogs.map((blog) => (
+                            <article
+                                key={`${blog.source}-${blog.id}`}
+                                className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+                            >
+                                <img src={blog.image} alt={blog.title} className="h-40 w-full object-cover" />
+                                <div className="p-4 flex flex-col flex-1">
+                                    <h3 className="font-semibold text-lg mb-2">{blog.title}</h3>
+                                    <p className="text-gray-600 text-sm mb-2">
+                                        By {blog.author} • {new Date(blog.date).toLocaleDateString()}
+                                    </p>
+                                    <Link
+                                        to={`/blogs/${blog.source}/${blog.id}`}
+                                        className="mt-auto text-blue-600 hover:underline font-medium"
+                                    >
+                                        Read More →
+                                    </Link>
+                                </div>
+                            </article>
                         ))}
                     </div>
                 )}

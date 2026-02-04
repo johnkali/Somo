@@ -19,12 +19,13 @@ const userSchema =  new mongoose.Schema({
         type: String,
         required: true,
     },
-    favorites: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Blogs",
-        },
+        favorites: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Blogs"
+            }
         ],
+        blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blogs" }],
     lastLoginAt: {
         type: Date,
         default: Date.now,

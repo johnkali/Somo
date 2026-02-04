@@ -1,15 +1,15 @@
 import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 // import {getExternalBlogs} from "../services/BlogServices.ts";
 import type {UnifiedBlog} from '../types/UnifiedBlog.ts';
 import api from "../services/api.ts";
-
+import {AuthContext} from "../context/AuthContext.tsx";
 
 function Home() {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    // const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const {user, setUser} = useContext(AuthContext)!;
     const [blogs, setBlogs] = useState<UnifiedBlog[]>([]);
     const [loading, setLoading] = useState(true);
-
 
     useEffect(() => {
         const fetchBlogs = async ()=>{
@@ -17,12 +17,12 @@ function Home() {
                 // 1. Fetch Mongo Blogs
                     const mongoRes = await api.get("/blogs");
                 const mongoBlogs: UnifiedBlog[] = mongoRes.data.map((blog: any)=>({
-                    id: blog._id,
+                    id: blog._id || new Date().getTime().toString(), //(fallback id)
                     title: blog.title,
                     content: blog.content,
                     image: blog.image || "https://picsum.photos/seed/picsum/200/300",
                     author: blog.author?.firstName,
-                    date: blog.createdAt,
+                    date: blog.createdAt || new Date().toISOString(),
                     source: "mongo",
                 }));
 
@@ -34,12 +34,12 @@ function Home() {
                 console.log(externalData);
 
                 const externalBlogs: UnifiedBlog[] = externalData.map((blog: any)=>({
-                    id: blog.id.toString(),
+                    id: blog.id.toString() || new Date().getTime().toString(), //(fallback id)
                     title: blog.title,
                     content: blog.description,
-                    image: blog.cover_image,
+                    image: blog.cover_image || "https://picsum.photos/seed/picsum/200/300",
                     author: blog.user.name,
-                    date: blog.published_at,
+                    date: blog.published_at || new Date().toISOString(),
                     source: "external",
                 }));
 
@@ -55,9 +55,32 @@ function Home() {
         fetchBlogs();
     }, []);
 
+    const toggleFavorite = async (blog: UnifiedBlog) => {
+        try {
+
+            if(!user) return alert("You must be logged in!");
+            const id = blog.source === "mongo" ? blog.id : blog.id.toString();
+            const res = await api.post(`/users/favorites/${id}`);
+
+            // update user in context
+            setUser((prev: any) => ({
+                ...prev,
+                favorites: res.data.favorites,
+            }));
+        } catch (error) {
+            console.error("Failed to toggle favorite", error);
+        }
+    };
+
+    const isFavorite = (blog: UnifiedBlog) => {
+        return user?.favorites?.includes(blog.id.toString());
+    };
+
     const truncateText = (text: string, length = 150) => {
         return text.length > length ? text.substring(0, length) + "..." : text;
     }
+
+
 
         return (
             <>
@@ -136,6 +159,14 @@ function Home() {
                                                 By {user.author} • {" "}
                                                 {new Date(blog.date).toLocaleDateString()}
                                             </p>
+                                            <div className="flex justify-between items-center mt-3">
+                                                <button
+                                                    onClick={() => toggleFavorite(blog)}
+                                                    className="text-xl"
+                                                >
+                                                    {isFavorite(blog) ? "❤️" : "🤍"}
+                                                </button>
+                                            </div>
 
                                             <h3 className="text-lg font-semibold text-gray-800 mb-4">
                                                 {blog.title}

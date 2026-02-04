@@ -24,7 +24,7 @@ app.use(express.json());
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/blogs", blogRoutes);
-app.use("/api/users", authRoutes)
+app.use("/api/users", authRoutes);
 
 
 // start the server

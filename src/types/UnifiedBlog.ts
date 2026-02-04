@@ -1,5 +1,5 @@
 export interface UnifiedBlog {
-    id: number;
+    id: string;
     title: string;
     content: string;
     image: string;

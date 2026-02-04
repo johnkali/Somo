@@ -113,24 +113,67 @@ router.post('/login', async (req, res) => {
 })
 
 //GET /api/users/profile
-router.get('/profile', protect, async (req, res) => {
+// GET /users/profile
+router.get("/profile", protect, async (req, res) => {
     try {
-        //get user info
-        const user =  await Users.findById(req.user.id)
-            .select("-password")
-                .populate("favorites");
+        const user = await Users.findById(req.user.id)
+            .populate("favorites") // <-- populates the full blog objects
+            .populate("blogs");    // optional: blogs created by user
 
-        //get blogs created by user
-        const blogs = await Blogs.find({author: req.user.id}).sort({ createdAt: -1 });
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         res.json({
-            user,
-            blogs,
-            blogCount: blogs.length,
+            firstName: user.firstName,
+            secondName: user.secondName,
+            email: user.email,
+            favorites: user.favorites, // now full blog objects
+            blogs: user.blogs || [],
+            lastLogin: user.lastLogin,
         });
-    }catch(err) {
-        console.error("PROFILE ERROR:", err);
-        res.status(500).json({message: "Internal server error!"});
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+//Toggle save/unsave blog
+router.post("/favorites/:blogId", protect, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        let {blogId} = req.params;
+        if(!blogId) {
+            return res.status(400).json({message: 'Blog ID is required!'});
+        }
+
+        blogId = blogId.toString();
+
+        const user  =  await Users.findById(userId);
+
+        if (!user) {
+            return res.status(404).send("No user found!");
+        }
+
+        if (!Array.isArray(user.favorites)) user.favorites = [];
+
+        const isSaved = user.favorites.includes(blogId);
+
+        if (isSaved) {
+            // unsave
+            user.favorites = user.favorites.filter((fav) => fav !== blogId);
+            await user.save();
+            return res.status(200).json({ message: "Blog Unsaved!", favorites: user.favorites });
+        } else {
+            // save
+            user.favorites.push(blogId);
+            await user.save();
+            return res.status(200).json({ message: "Blog Saved!", favorites: user.favorites });
+        }
+
+    }catch (error) {
+        console.error("SAVE BLOG ERROR",error);
+        res.status(500).json({message: "Server Error"});
     }
 })
 
