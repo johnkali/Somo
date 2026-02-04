@@ -27,7 +27,7 @@ const Profile = () => {
                    <span className="text-gray-500 text-[20px]">User Name:</span> {user.firstName} {user.secondName}
                 </h2>
                 <p className="text-sm text-gray-600"><span className="text-gray-500 text-[20px] font-bold">E-mail:</span> {user.email}</p>
-                <p className="text-sm text-gray-600"><span className="text-gray-500 text-[20px] font-bold">Last Login: </span>{new Date(user.lastLogin).toDateString()}</p>
+                <p className="text-sm text-gray-600"><span className="text-gray-500 text-[20px] font-bold">Last Login: </span>{new Date(user.lastLoginAt).toDateString()}</p>
                 <p className="mt-2 font-medium"><span className="text-gray-500 font-bold text-sm">Blogs Created: </span>{blogCount}</p>
             </section>
 
