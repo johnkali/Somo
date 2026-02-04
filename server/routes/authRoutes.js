@@ -122,6 +122,7 @@ router.get('/profile', protect, async (req, res) => {
 
         //get blogs created by user
         const blogs = await Blogs.find({author: req.user.id}).sort({ createdAt: -1 });
+
         res.json({
             user,
             blogs,
