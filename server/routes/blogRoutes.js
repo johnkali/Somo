@@ -38,7 +38,7 @@ router.post("/", protect, async (req, res) => {
 //Get blogs from db
 router.get("/", protect,async (req, res) => {
     try {
-        const blogs = await Blog.find()
+        const blogs = await Blogs.find()
             .populate("author", "firstName") //get author details
             .sort({createdAt: -1}); // newest first
         // console.log(blogs);
