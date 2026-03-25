@@ -2,9 +2,6 @@ import express from 'express';
 import Blogs from '../models/Blogs.js';
 import {protect} from '../middleware/authMiddleware.js'
 import Users from "../models/Users.js";
-import Blog from '../models/Blogs.js';
-import { json } from 'stream/consumers';
-import { ReturnDocument } from 'mongodb';
 
 const router = express.Router();
 
@@ -83,7 +80,7 @@ router.post("/:id/comments", protect, async(req, res)=> {
         }
         //check is comment is empty
 
-        const blog =  await Blog.findById(req.params.id);
+        const blog =  await Blogs.findById(req.params.id);
         if(!blog){
             return res.status(404).json({message: "Blog not found!"});
         }
@@ -111,7 +108,7 @@ router.delete("/blogId/comments/:commentId", protect, async(req, res)=>{
     try{
         const {blogId, commentId} = req.params;
 
-        const blog  =  await Blog.findById(blogId);
+        const blog  =  await Blogs.findById(blogId);
         if(!blog){
             return res.status(404).json({message: "Blog not found!"})
         }
