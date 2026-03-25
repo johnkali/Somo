@@ -4,6 +4,7 @@ import {protect} from '../middleware/authMiddleware.js'
 import Users from "../models/Users.js";
 import Blog from '../models/Blogs.js';
 import { json } from 'stream/consumers';
+import { ReturnDocument } from 'mongodb';
 
 const router = express.Router();
 
@@ -71,6 +72,11 @@ router.get("/:id", protect, async (req, res) => {
 router.post("/:id/comments", protect, async(req, res)=> {
     try{
         const {text} = req.body;
+        req.user = {id: _id};
+
+        if(!req.user){
+            return res.status(401).json({message: "User not authorized"});
+        }
 
         if(!text){
             return res.status(400).json({message: "Comment text us required"})
