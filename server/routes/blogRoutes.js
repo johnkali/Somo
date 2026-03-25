@@ -107,5 +107,37 @@ router.post("/:id/comments", protect, async(req, res)=> {
     }
 })
 
+router.delete("/blogId/comments/:commentId", protect, async(req, res)=>{
+    try{
+        const {blogId, commentId} = req.params;
+
+        const blog  =  await Blog.findById(blogId);
+        if(!blog){
+            return res.status(404).json({message: "Blog not found!"})
+        }
+
+        const comment =  blog.comments.id(commentId);
+        if(!comment){
+            return res.status(404).json({message: "Comment not found!"})
+        }
+
+        //ownership check
+        if(comment.user.toString() !== req.user.id){
+            return res.status(403).json({message: "Now Allowed!"})
+        }
+
+        //Remove comment
+        comment.deleteOne();
+
+        await blog.save();
+
+        res.json({message: "Comment deleted!", comments: blog.comments })
+    }catch(error){
+        console.error("DELETE COMMENT ERROR", error);
+        res.status(500).json({message: "Server error"})
+    }
+})
+
+
 export default router;
 
