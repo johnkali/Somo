@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../services/api.ts";
+import { AuthContext } from "../context/AuthContext.tsx";
 
 const BlogDetails = () => {
   const { id, source } = useParams();
@@ -8,34 +9,34 @@ const BlogDetails = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const [commentText, setCommentText] = useState("");
+  const { user } = useContext(AuthContext)!;
 
- 
-    const fetchBlog = async () => {
-      // const token = localStorage.getItem("token");
-      //
-      // if (!token) {
-      //     alert("You must be logged in to create a blog");
-      //     return;
-      // }
-      try {
-        setLoading(true);
-        if (source === "mongo") {
-          const res = await api.get(`/blogs/${id}`);
-          console.log(res);
-          setBlog(res.data);
-        } else if (source === "external") {
-          const res = await fetch(`https://dev.to/api/articles/${id}`);
-          const data = await res.json();
-          setBlog(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch blog", error);
-      } finally {
-        setLoading(false);
+  const fetchBlog = async () => {
+    // const token = localStorage.getItem("token");
+    //
+    // if (!token) {
+    //     alert("You must be logged in to create a blog");
+    //     return;
+    // }
+    try {
+      setLoading(true);
+      if (source === "mongo") {
+        const res = await api.get(`/blogs/${id}`);
+        console.log(res);
+        setBlog(res.data);
+      } else if (source === "external") {
+        const res = await fetch(`https://dev.to/api/articles/${id}`);
+        const data = await res.json();
+        setBlog(data);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch blog", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-     useEffect(() => {
+  useEffect(() => {
     fetchBlog();
   }, [id, source]);
 
@@ -83,7 +84,8 @@ const BlogDetails = () => {
         <div className="prose max-w-none">
           {blog.content || blog.body_markdown}
         </div>
-        <div className="mt-8">
+        {user ? (
+              <div className="mt-8">
           <h3 className="text-xl front-semibold mb-4">Add a comment</h3>
           <textarea
             value={commentText}
@@ -99,6 +101,16 @@ const BlogDetails = () => {
             Post Comment
           </button>
         </div>
+        ):(
+             <button
+            onClick={handleAddComment}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Login to comment
+          </button>
+        )}
+
+      
         <div className="mt-10">
           <h3 className="text-xl font-semibold mb-4">Comments</h3>
           {blog?.comments?.length === 0 && (
