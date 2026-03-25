@@ -9,7 +9,7 @@ const router = express.Router();
 //Create Blogs
 router.post("/", protect, async (req, res) => {
     try {
-        const {title, content, image} = req.body;
+        const {title, content, image, visibility} = req.body;
 
         //validate
         if (!title || !content || !image) {
@@ -20,6 +20,7 @@ router.post("/", protect, async (req, res) => {
             title,
             content,
             image,
+            visibility: visibility || "public",
             author: req.user._id, //comes from token that we received from FE via the authMiddleware
         });
 
