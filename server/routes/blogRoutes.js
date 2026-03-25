@@ -69,7 +69,7 @@ router.get("/:id", protect, async (req, res) => {
 
 router.post("/blogs/:id/comments", protect, async(req, res)=> {
     try{
-        const {text} = red.body;
+        const {text} = req.body;
 
         if(!text){
             return res.status(400).json({message: "Comment text us required"})
