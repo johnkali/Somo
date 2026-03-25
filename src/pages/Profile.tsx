@@ -112,7 +112,7 @@ const Profile = () => {
                                 <div className="p-4 flex flex-col flex-1">
                                     <h3 className="font-semibold text-lg mb-2">{blog.title}</h3>
                                     <p className="text-gray-600 text-sm mb-2">
-                                        By {blog.author} • {new Date(blog.date).toLocaleDateString()}
+                                        By {user.firstName} • {new Date(blog.date).toLocaleDateString()}
                                     </p>
                                     <Link
                                         to={`/blogs/${blog.source}/${blog.id}`}
@@ -145,7 +145,7 @@ const Profile = () => {
                                 <div className="p-4 flex flex-col flex-1">
                                     <h3 className="font-semibold text-lg mb-2">{blog.title}</h3>
                                     <p className="text-gray-600 text-sm mb-2">
-                                        By {blog.author} • {new Date(blog.date).toLocaleDateString()}
+                                        By {user.firstName} • {new Date(blog.date).toLocaleDateString()}
                                     </p>
                                     <Link
                                         to={`/blogs/${blog.source}/${blog.id}`}
