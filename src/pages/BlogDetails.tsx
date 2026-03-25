@@ -58,6 +58,15 @@ const BlogDetails = () => {
     }
   };
 
+  const handleDeleteComment =  async (commentId: string)=>{
+    try{
+        await api.delete(`blogs/${id}/comments/${commentId}`);
+        fetchBlog();
+    }catch(error){
+        console.error("Failed to delete comment: ", error)
+    }
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <button
@@ -85,32 +94,30 @@ const BlogDetails = () => {
           {blog.content || blog.body_markdown}
         </div>
         {user ? (
-              <div className="mt-8">
-          <h3 className="text-xl front-semibold mb-4">Add a comment</h3>
-          <textarea
-            value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
-            placeholder="Add your comment..."
-            className="w-full boarder rounded-lg p-3 mb-3"
-          />
+          <div className="mt-8">
+            <h3 className="text-xl front-semibold mb-4">Add a comment</h3>
+            <textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              placeholder="Add your comment..."
+              className="w-full boarder rounded-lg p-3 mb-3"
+            />
 
+            <button
+              onClick={handleAddComment}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Post Comment
+            </button>
+          </div>
+        ) : (
           <button
-            onClick={handleAddComment}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Post Comment
-          </button>
-        </div>
-        ):(
-             <button
             onClick={handleAddComment}
             className="bg-blue-600 text-white px-4 py-2 rounded"
           >
             Login to comment
           </button>
         )}
-
-      
         <div className="mt-10">
           <h3 className="text-xl font-semibold mb-4">Comments</h3>
           {blog?.comments?.length === 0 && (
@@ -121,9 +128,19 @@ const BlogDetails = () => {
             <div key={comment._id} className="boarder-b py-3">
               <p className="font-medium">{comment.user?.firstName}</p>
               <p className="text-gray-700">{comment.text}</p>
-              <p className="text-sm text-gray-400">
+                <p className="text-sm text-gray-400">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </p>
+              {/* Delete comment if logged in check */}
+              {user && comment.user?._id === user._id && (
+                <button
+                  onClick={() => handleDeleteComment(comment._id)}
+                  className="text-red-500 text-sm mt-1"
+                >
+                  Delete
+                </button>
+              )}
+            
             </div>
           ))}
         </div>
