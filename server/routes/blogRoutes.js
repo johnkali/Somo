@@ -68,7 +68,7 @@ router.get("/:id", protect, async (req, res) => {
 })
 
 
-router.post("/blogs/:id/comments", protect, async(req, res)=> {
+router.post("/:id/comments", protect, async(req, res)=> {
     try{
         const {text} = req.body;
 
