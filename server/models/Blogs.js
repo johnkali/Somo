@@ -19,6 +19,11 @@ const blogSchema = new mongoose.Schema(
       required: true,
       ref: "Users", //link to users collection
     },
+    visibility: {
+        type: String,
+        enum: ["public", "private"],
+        default: "public"
+    },
     comments: [
       {
         user: {
