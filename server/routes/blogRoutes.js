@@ -2,6 +2,8 @@ import express from 'express';
 import Blogs from '../models/Blogs.js';
 import {protect} from '../middleware/authMiddleware.js'
 import Users from "../models/Users.js";
+import Blog from '../models/Blogs.js';
+import { json } from 'stream/consumers';
 
 const router = express.Router();
 
@@ -64,6 +66,39 @@ router.get("/:id", protect, async (req, res) => {
 
 })
 
+
+router.post("/blogs/:id/comments", protect, async(req, res)=> {
+    try{
+        const {text} = red.body;
+
+        if(!text){
+            return res.status(400).json({message: "Comment text us required"})
+        }
+        //check is comment is empty
+
+        const blog =  await Blog.findById(req.params.id);
+        if(!blog){
+            return res.status(404).json({message: "Blog not found!"});
+        }
+        //check is blog exists
+
+        //save blog
+        blog.comments.push({
+            user: req.user.id,
+            text
+        });
+
+        await blog.save();
+        res.status(201).json({
+            message: "Comment added successfully",
+            comment: blog.comments,
+        });
+
+    }catch(error){
+        console.error("ADD COMMENT ERROR: ", error);
+        res.status(500).json({message: "Failed to add comment" });
+    }
+})
 
 export default router;
 
