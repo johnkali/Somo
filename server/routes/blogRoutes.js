@@ -57,6 +57,13 @@ router.get("/:id", protect, async (req, res) => {
         if (!blog) {
             return res.status(404).json("No blog found!");
         }
+        //If private only owner can view
+        if(
+            blog.visibility === "private" &&
+            (!req.user || blog.author._id.toString() !== req.user.id)
+        ){
+            return res.status(403).json({message: "Access denied"});
+        }
         res.status(200).json(blog);
 
     }catch (error){
