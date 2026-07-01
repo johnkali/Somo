@@ -4,6 +4,7 @@ export interface UnifiedBlog {
     content: string;
     image: string;
     author: string;
+    visibility: string,
     date: string;
     source: "mongo" | "external"
 }

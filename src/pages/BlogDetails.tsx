@@ -58,14 +58,14 @@ const BlogDetails = () => {
     }
   };
 
-  const handleDeleteComment =  async (commentId: string)=>{
-    try{
-        await api.delete(`blogs/${id}/comments/${commentId}`);
-        fetchBlog();
-    }catch(error){
-        console.error("Failed to delete comment: ", error)
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await api.delete(`blogs/${id}/comments/${commentId}`);
+      fetchBlog();
+    } catch (error) {
+      console.error("Failed to delete comment: ", error);
     }
-  }
+  };
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -86,7 +86,7 @@ const BlogDetails = () => {
           <img
             src={blog.image || blog.cover_image}
             alt=""
-            className="w-full h-[500px] object-cover rounded-xl"
+            className="w-full h-125 object-cover rounded-xl"
           />
         ) : null}{" "}
         {/* Add dummy image toa null   */}
@@ -128,7 +128,7 @@ const BlogDetails = () => {
             <div key={comment._id} className="boarder-b py-3">
               <p className="font-medium">{comment.user?.firstName}</p>
               <p className="text-gray-700">{comment.text}</p>
-                <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-400">
                 {new Date(comment.createdAt).toLocaleDateString()}
               </p>
               {/* Delete comment if logged in check */}
@@ -140,7 +140,6 @@ const BlogDetails = () => {
                   Delete
                 </button>
               )}
-            
             </div>
           ))}
         </div>

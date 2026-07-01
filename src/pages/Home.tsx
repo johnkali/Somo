@@ -22,6 +22,7 @@ function Home() {
           content: blog.content,
           image: blog.image || "https://picsum.photos/seed/picsum/200/300",
           author: blog.author?.firstName,
+          visibility: blog.visibility || "public",
           date: blog.createdAt || new Date().toISOString(),
           source: "mongo",
         }));
@@ -125,7 +126,7 @@ function Home() {
       <main className="bg-gray-50 min-h-screen">
         <section className="max-w-7xl mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold  mb-4">
-            Welcome, {user.firstName}
+            Welcome{user ? `, ${user.firstName}` : ""}
           </h1>
           <p className="text-gray-700">
             Explore amazing blogs, create your own, and save your favorites.
@@ -156,18 +157,25 @@ function Home() {
                   {/* Blogs Content */}
                   <div className="p-5 flex flex-col flex-1">
                     <p className="text-sm text-gray-500 mb-2">
-                      By {user.author} •{" "}
+                      By {blog.author} •{" "}
                       {new Date(blog.date).toLocaleDateString()}
                     </p>
                     <div className="flex justify-between items-center mt-3">
-                      <button
-                        onClick={() => toggleFavorite(blog)}
-                        className="text-xl"
-                      >
-                        {isFavorite(blog) ? "❤️" : "🤍"}
-                      </button>
+                      {user && (
+                        <button
+                          onClick={() => toggleFavorite(blog)}
+                          className="text-xl"
+                        >
+                          {isFavorite(blog) ? "❤️" : "🤍"}
+                        </button>
+                      )}
                     </div>
 
+                    <span className="text-xs px-2 py-1 rounded bg-gray-200">
+                      {blog.visibility === "private"
+                        ? "🔒 Private"
+                        : "🌍 Public"}
+                    </span>
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
                       {blog.title}
                     </h3>
